@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -76,16 +74,32 @@ class _CameraWidgetState extends State<CameraWidget> {
               ),
             ),
             SafeArea(
-              child: BackButton(
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            Positioned(
-              child: IconButton(
-                icon: const Icon(
-                  Icons.circle_outlined,
-                ),
-                onPressed: () => _handleTakePicture(),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: BackButton(
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.circle_outlined,
+                            size: 75,
+                          ),
+                          onPressed: () => _handleTakePicture(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
