@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
               builder: (context) => const CameraWidget(),
             ),
           ),
-          child: const Text('Abrir câmera'),
+          child: const Text('Open camera'),
         ),
       ),
     );
