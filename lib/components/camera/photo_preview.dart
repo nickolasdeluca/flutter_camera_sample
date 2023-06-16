@@ -12,6 +12,12 @@ class PhotoPreview extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your photo'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pop(context, true),
+            icon: const Icon(Icons.save),
+          ),
+        ],
       ),
       body: SizedBox.expand(
         child: Image.file(

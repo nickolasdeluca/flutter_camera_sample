@@ -1,8 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_camera_sample/components/camera/photo_preview.dart';
+import 'package:flutter_camera_sample/components/dialogs/dialogs.dart';
+import 'package:flutter_camera_sample/home/view.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({super.key});
@@ -34,11 +38,36 @@ class _CameraWidgetState extends State<CameraWidget> {
       }
     } else {
       if (permissionStatus.isDenied) {
-        // TODO: Adicionar alert aqui
+        if (!mounted) return;
+
+        await Dialogs.confirm(context, "User denied access to camera",
+            "You need to allow access to the camera in order to use this function!");
+
+        if (!mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
       } else if (permissionStatus.isPermanentlyDenied) {
-        // TODO: Adicionar outro alert aqui
+        if (!mounted) return;
+
+        await Dialogs.confirm(context, "User denied access to camera",
+            "You'll have to manually give permission in the app's settings!");
+
+        if (!mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
       }
     }
+
     if (mounted) {
       setState(() {});
     }
@@ -55,20 +84,34 @@ class _CameraWidgetState extends State<CameraWidget> {
       return;
     }
 
-    final file = await _controller!.takePicture();
+    XFile image = await _controller!.takePicture();
+    bool shouldSave = false;
 
     if (!mounted) return;
 
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PhotoPreview(image: file.path),
+        builder: (context) => PhotoPreview(image: image.path),
       ),
+    ).then(
+      (value) => (shouldSave = value ?? false),
     );
 
-    if (kDebugMode) print(file.path);
+    if (shouldSave) {
+      await GallerySaver.saveImage(image.path);
 
-    // TODO: Descobrir como salvar a foto apenas se o usuário confirmou
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      );
+    }
+
+    await File(image.path).delete();
   }
 
   @override
