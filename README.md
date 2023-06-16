@@ -1,16 +1,9 @@
 # flutter_camera_sample
 
-A new Flutter project.
+This project aims to learn and show how to use the device's camera to take pictures and if needed store them in the device's gallery.
 
-## Getting Started
+## Project dependencies
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  [camera](https://pub.dev/packages/camera)
+  [permission_handler](https://pub.dev/packages/permission_handler)
+  [gallery_saver](https://pub.dev/packages/gallery_saver)
