@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_camera_sample/components/camera.dart';
+import 'package:flutter_camera_sample/components/camera/camera.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

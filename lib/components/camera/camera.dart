@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_camera_sample/components/camera/photo_preview.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CameraWidget extends StatefulWidget {
@@ -53,9 +55,20 @@ class _CameraWidgetState extends State<CameraWidget> {
       return;
     }
 
-    dynamic file = await _controller!.takePicture();
+    final file = await _controller!.takePicture();
 
-    // TODO: Descobrir como salva a foto e/ou mostra ela na tela
+    if (!mounted) return;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoPreview(image: file.path),
+      ),
+    );
+
+    if (kDebugMode) print(file.path);
+
+    // TODO: Descobrir como salvar a foto apenas se o usuário confirmou
   }
 
   @override
