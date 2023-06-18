@@ -33,7 +33,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     if (permissionStatus.isGranted) {
       _cameras = await availableCameras();
       if (_cameras != null && _cameras!.isNotEmpty) {
-        _controller = CameraController(_cameras![0], ResolutionPreset.medium);
+        _controller = CameraController(_cameras![0], ResolutionPreset.max);
         await _controller!.initialize();
       }
     } else {
