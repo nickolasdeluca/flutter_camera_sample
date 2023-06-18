@@ -18,6 +18,7 @@ class CameraWidget extends StatefulWidget {
 class _CameraWidgetState extends State<CameraWidget> {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
+  int _selectedCameraIdx = 0;
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _CameraWidgetState extends State<CameraWidget> {
       _cameras = await availableCameras();
       if (_cameras != null && _cameras!.isNotEmpty) {
         _controller = CameraController(
-          _cameras![0],
+          _cameras![_selectedCameraIdx],
           ResolutionPreset.max,
           enableAudio: false,
           imageFormatGroup: Platform.isAndroid
@@ -84,6 +85,20 @@ class _CameraWidgetState extends State<CameraWidget> {
   void dispose() {
     _controller?.dispose();
     super.dispose();
+  }
+
+  void _handleCameraFlip() {
+    setState(() {
+      _selectedCameraIdx = (_selectedCameraIdx + 1) % _cameras!.length;
+      _controller!.dispose();
+      _controller = CameraController(
+          _cameras![_selectedCameraIdx], ResolutionPreset.medium);
+      _controller!.initialize().then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+    });
   }
 
   void _handleTakePicture() async {
@@ -150,17 +165,38 @@ class _CameraWidgetState extends State<CameraWidget> {
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 50),
-                      child: SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.circle_outlined,
-                            size: 75,
-                            color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                            width: 100,
                           ),
-                          onPressed: () => _handleTakePicture(),
-                        ),
+                          SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.circle_outlined,
+                                size: 75,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => _handleTakePicture(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.sync_sharp,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => _handleCameraFlip(),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
