@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show File, Platform;
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -33,7 +33,14 @@ class _CameraWidgetState extends State<CameraWidget> {
     if (permissionStatus.isGranted) {
       _cameras = await availableCameras();
       if (_cameras != null && _cameras!.isNotEmpty) {
-        _controller = CameraController(_cameras![0], ResolutionPreset.max);
+        _controller = CameraController(
+          _cameras![0],
+          ResolutionPreset.max,
+          enableAudio: false,
+          imageFormatGroup: Platform.isAndroid
+              ? ImageFormatGroup.jpeg
+              : ImageFormatGroup.bgra8888,
+        );
         await _controller!.initialize();
       }
     } else {
@@ -136,6 +143,7 @@ class _CameraWidgetState extends State<CameraWidget> {
                     alignment: Alignment.topLeft,
                     child: BackButton(
                       onPressed: () => Navigator.pop(context),
+                      color: Colors.white,
                     ),
                   ),
                   Align(
@@ -149,6 +157,7 @@ class _CameraWidgetState extends State<CameraWidget> {
                           icon: const Icon(
                             Icons.circle_outlined,
                             size: 75,
+                            color: Colors.white,
                           ),
                           onPressed: () => _handleTakePicture(),
                         ),
